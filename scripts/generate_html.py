@@ -3,7 +3,8 @@
 
 Visual de estudo inspirado na organização do roadmap.sh: espinha azul de
 fases e tópicos ramificando à direita. Cada tópico abre um painel
-lateral com Conceito · Prática · Validação · Me teste. O progresso é
+lateral com Conceito · Prática · Validação · Me teste · Material de aula
+(artigos linkados e vídeos do YouTube embedados com lazy loading). O progresso é
 gravado direto no progresso.json da raiz via File System Access API
 (Chrome/Edge) — basta abrir o arquivo, sem servidor nem localStorage. O
 index.html da raiz (scripts/generate_index.py) é o dashboard com um card por
@@ -83,7 +84,53 @@ def md_lite(text):
     return "<br>".join(out.split("\n"))
 
 
-SECTION_CLASS = {"Conceito": "conceito", "Prática": "pratica", "Validação": "validacao", "Me teste": "meteste"}
+SECTION_CLASS = {"Conceito": "conceito", "Prática": "pratica", "Validação": "validacao", "Me teste": "meteste", "Material de aula": "material"}
+
+YOUTUBE_RE = re.compile(r"(?:youtube\.com/(?:watch\?[^)\s]*v=|shorts/)|youtu\.be/)([\w-]{11})")
+MATERIAL_ITEM_RE = re.compile(r"^-\s*(Artigo|Vídeo):\s*\[([^\]]+)\]\((https?://[^)\s]+)\)\s*(?:—\s*(.*))?$")
+
+
+def render_material(text):
+    articles, videos, extra = [], [], []
+    for raw in text.split("\n"):
+        line = raw.strip()
+        if not line:
+            continue
+        m = MATERIAL_ITEM_RE.match(line)
+        if not m:
+            extra.append(line)
+            continue
+        kind, title, url, note = m.groups()
+        title_html = f'<a href="{html.escape(url, quote=True)}" target="_blank" rel="noopener">{html.escape(title)}</a>'
+        note_html = f' <span class="material-note">— {md_lite(note)}</span>' if note else ""
+        if kind == "Artigo":
+            articles.append(f"<li>{title_html}{note_html}</li>")
+        else:
+            videos.append((YOUTUBE_RE.search(url), url, title, note_html))
+    out = ""
+    if articles:
+        out += f'<ul class="material-links">{"".join(articles)}</ul>'
+    for match, url, title, note_html in videos:
+        caption = f'<p class="video-caption"><a href="{html.escape(url, quote=True)}" target="_blank" rel="noopener">{html.escape(title)}</a>{note_html}</p>'
+        if match:
+            vid = match.group(1)
+            out += (f'<div class="material-video"><div class="player">'
+                    f'<iframe loading="lazy" src="https://www.youtube.com/embed/{vid}" title="{html.escape(title, quote=True)}" '
+                    f'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+                    f'</div>{caption}</div>')
+        else:
+            out += (f'<ul class="material-links"><li>'
+                    f'<a href="{html.escape(url, quote=True)}" target="_blank" rel="noopener">{html.escape(title)}</a>{note_html}</li></ul>')
+    if extra:
+        out += f'<p>{md_lite(chr(10).join(extra))}</p>'
+    return out or f'<p>{md_lite(text)}</p>'
+
+
+def render_section(s):
+    cls = SECTION_CLASS.get(s["label"], "")
+    content = render_material(s["text"]) if cls == "material" else f'<p>{md_lite(s["text"])}</p>'
+    return (f'<div class="sec {cls}">'
+            f'<span class="sec-label">{html.escape(s["label"])}</span>{content}</div>')
 
 
 def render_node(node):
@@ -96,12 +143,7 @@ def render_node(node):
     if "GAP" in flags:
         cls += " gap"
         badges += '<span class="badge gap">⚠️ GAP</span>'
-    body = "".join(
-        f'<div class="sec {SECTION_CLASS.get(s["label"], "")}">'
-        f'<span class="sec-label">{html.escape(s["label"])}</span>'
-        f'<p>{md_lite(s["text"])}</p></div>'
-        for s in node["sections"]
-    )
+    body = "".join(render_section(s) for s in node["sections"])
     return f'''
     <div class="topic-row" id="n{node['id']}" data-node-row="{node['id']}">
       <input type="checkbox" class="done" data-node="{node['id']}" aria-label="Marcar {node['id']} como concluído">
@@ -220,6 +262,14 @@ page = f"""<!DOCTYPE html>
   .sec.pratica .sec-label {{ background:#0369a1; }}
   .sec.validacao .sec-label {{ background:#16a34a; }}
   .sec.meteste .sec-label {{ background:#9333ea; }}
+  .sec.material .sec-label {{ background:#b45309; }}
+  .material-links {{ margin:.5rem 0 0; padding-left:1.15rem; font-size:.92rem; line-height:1.6; }}
+  .material-links li {{ margin:.3rem 0; }}
+  .material-note {{ color:var(--muted); font-size:.88em; }}
+  .material-video {{ margin-top:.85rem; }}
+  .material-video .player {{ position:relative; aspect-ratio:16/9; border-radius:12px; overflow:hidden; border:1px solid var(--line); background:#0f172a; box-shadow:0 6px 18px rgba(15,23,42,.1); }}
+  .material-video iframe {{ position:absolute; inset:0; width:100%; height:100%; border:0; }}
+  .video-caption {{ font-size:.83rem; color:var(--muted); margin:.45rem 0 0; line-height:1.45; }}
   code {{ background:#fff; border:1px solid #d4d4d4; border-radius:4px; padding:.05em .3em; font-size:.85em; }}
   a {{ color:#0369a1; }}
   .hint {{ font-size:.8rem; color:var(--primary); margin-top:.7rem; }}

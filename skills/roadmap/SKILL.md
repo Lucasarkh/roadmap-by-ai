@@ -35,7 +35,26 @@ Roadmaps novos e expansões exigem pesquisa web atual.
 - Faça leitura crítica de números e alegações de marketing.
 - Evite rankings voláteis; ensine critérios de escolha.
 - Registre links, data e o que cada fonte ancora no
-  `Anexo B — Fontes (pesquisadas em AAAA-MM-DD)` do próprio roadmap.
+  `Anexo B — Fontes (pesquisadas em AAAA-MM-DD)` do próprio roadmap. A data do
+  Anexo B vale também como data de verificação dos materiais de aula dos nós.
+
+### Material de aula de cada nó
+
+Além da pesquisa geral, cada nó exige busca dedicada por artigos e vídeos do
+YouTube sobre o tema exato do nó:
+
+- Investigue a fundo: busque, abra e leia/assista o suficiente para garantir
+  que o material trata do tópico do nó — não do tema geral do roadmap.
+- Verifique cada link antes de incluí-lo: o artigo responde HTTP 200 e o
+  conteúdo confere; o vídeo é validado pelo endpoint oEmbed do YouTube
+  (`https://www.youtube.com/oembed?url=<url-do-vídeo>&format=json` — 200
+  significa que existe e é público) e tem título/descrição compatíveis.
+- Prefira documentação oficial, blogs de engenharia, artigos originais e
+  canais oficiais de fornecedores ou conferências.
+- Nunca invente URL, título ou ID de vídeo. Se não encontrar material bom e
+  verificável, inclua menos itens — nunca preencha com qualquer coisa.
+- Vídeos entram com a URL canônica `https://www.youtube.com/watch?v=VIDEO_ID`
+  para o gerador embedar o player no painel lateral.
 
 Não registre pesquisa específica de um roadmap na `SPEC.md` global.
 
@@ -59,12 +78,17 @@ Formato obrigatório:
 - **Prática:** exercício concreto.
 - **Validação:** critério objetivo de aprendizagem.
 - **Me teste:** 2 a 3 perguntas separadas por `·`.
+- **Material de aula:**
+  - Artigo: [Título real do artigo](https://url) — publicação/autor; o que ancora no nó.
+  - Vídeo: [Título real do vídeo](https://www.youtube.com/watch?v=VIDEO_ID) — canal; o que cobre.
 ```
 
 Regras:
 
 - `F.N` é único, estável e imutável. Nunca renumere IDs existentes.
-- Todo nó contém os quatro blocos; sem Prática e Validação ele não entra.
+- Todo nó contém os cinco blocos; sem Prática e Validação ele não entra.
+- Material de aula: 1 a 3 artigos e 1 a 2 vídeos, todos verificados na web e
+  fiéis ao tema do nó, conforme a seção 2.
 - Continuações usam dois espaços de indentação.
 - Quando houver experiência prévia, use pontes explícitas entre tecnologias.
 - Prefira exercícios em projetos mínimos reproduzíveis ou caminhos relativos
@@ -159,17 +183,21 @@ Referências externas orientam organização e hierarquia, não identidade visua
 2. Fases e Mermaid expressam dependências reais.
 3. IDs existentes foram preservados.
 4. Todos os nós cumprem o formato.
-5. Anexo B contém data, fontes primárias e âncoras.
-6. Roadmap HTML foi regenerado.
-7. Glossário HTML foi regenerado quando existir.
-8. Dashboard foi regenerado quando aplicável.
-9. Geradores compilam e `git diff --check` passa.
-10. Mudanças visuais foram verificadas em pelo menos dois roadmaps.
-11. Nenhum dado privado ou caminho absoluto entrou no conteúdo publicável.
+5. Todo nó tem Material de aula verificado (artigo abre, vídeo existe) e fiel
+   ao tema do nó, e o HTML renderiza artigos como links e vídeos embedados.
+6. Anexo B contém data, fontes primárias e âncoras.
+7. Roadmap HTML foi regenerado.
+8. Glossário HTML foi regenerado quando existir.
+9. Dashboard foi regenerado quando aplicável.
+10. Geradores compilam e `git diff --check` passa.
+11. Mudanças visuais foram verificadas em pelo menos dois roadmaps.
+12. Nenhum dado privado ou caminho absoluto entrou no conteúdo publicável.
 
 ## Fora de escopo
 
 - teoria desconectada do objetivo do roadmap;
 - rankings de ferramentas que envelhecem rapidamente;
 - nós decorativos sem prática e validação;
+- material de aula genérico, fora do tema exato do nó, ou com link não
+  verificado na web;
 - edição direta de artefatos gerados.

@@ -103,7 +103,10 @@ Valide pelo menos dois roadmaps, incluindo um com marcadores opcionais
 - Idioma: pt-BR; termos, ferramentas e APIs em inglês.
 - Fases vão de `0` a `N`; a cobertura define a quantidade.
 - IDs `F.N` são únicos, estáveis e nunca renumerados.
-- Todo nó contém Conceito, Prática, Validação e Me teste.
+- Todo nó contém Conceito, Prática, Validação, Me teste e Material de aula.
+- Material de aula: 1 a 3 artigos e 1 a 2 vídeos do YouTube por nó, pesquisados
+  para o tema exato do nó; todo link é aberto e verificado na web antes de
+  entrar (vídeo validado via oEmbed). O painel do HTML embeda o player.
 - O checkbox significa **Concluído**; domínio é demonstrado na Validação.
 - `PROJ` e `GAP` são calibração opcional, nunca padrão de um roadmap público.
 - Pesquisa web com fontes primárias e data no Anexo B é obrigatória para criar

@@ -93,17 +93,37 @@ O número de fases é consequência da cobertura, não uma constante global.
 - **Prática:** exercício concreto.
 - **Validação:** critério objetivo de aprendizagem.
 - **Me teste:** 2 a 3 perguntas separadas por `·`.
+- **Material de aula:**
+  - Artigo: [Título real do artigo](https://url) — publicação/autor; o que ancora no nó.
+  - Vídeo: [Título real do vídeo](https://www.youtube.com/watch?v=VIDEO_ID) — canal; o que cobre.
 ```
 
 - `F.N` é único, estável e imutável.
-- Todo nó contém Conceito, Prática, Validação e Me teste.
+- Todo nó contém Conceito, Prática, Validação, Me teste e Material de aula.
 - Nó sem prática ou validação não entra.
 - Continuações de uma seção usam dois espaços de indentação.
 - Idioma: pt-BR; termos, ferramentas e APIs permanecem em inglês.
 - O checkbox representa conclusão do nó. Domínio é verificado pela Validação e
   pelo bloco Me teste; a interface usa sempre o termo “concluído”.
 
-### 4.3 Calibração opcional
+### 4.3 Material de aula
+
+Cada nó traz de 1 a 3 artigos e 1 a 2 vídeos do YouTube, pesquisados na web
+especificamente para o tema do nó.
+
+- Fidelidade ao tópico: o material trata exatamente do assunto do nó, não do
+  tema geral do roadmap. Nada de link genérico para preencher espaço.
+- Veracidade verificada: todo link é aberto antes de entrar (artigo responde
+  HTTP 200 e o conteúdo confere com o nó; vídeo é validado pelo endpoint oEmbed
+  do YouTube e tem título/descrição compatíveis com o nó). URL, título ou ID
+  inventado é falha grave — se não houver material bom, reduza a quantidade.
+- Prioridade: documentação oficial, blogs de engenharia, artigos originais e
+  canais oficiais de fornecedores ou conferências no YouTube.
+- Vídeos usam a URL canônica `https://www.youtube.com/watch?v=VIDEO_ID`; o
+  gerador extrai o ID para embedar o player no painel.
+- A nota após o `—` diz o que o material ancora no nó, em pt-BR.
+
+### 4.4 Calibração opcional
 
 Roadmaps personalizados podem marcar nós no título:
 
@@ -122,8 +142,13 @@ primárias completas sempre que possível.
   mantenedores.
 - Use agregadores e roadmaps externos apenas para checar cobertura.
 - Registre fontes e data em `Anexo B — Fontes (pesquisadas em AAAA-MM-DD)` no
-  próprio `<TEMA>-ROADMAP.md`.
+  próprio `<TEMA>-ROADMAP.md`. O Anexo B cobre também a verificação dos
+  materiais de aula dos nós: a data registrada vale como data em que cada link
+  foi aberto e conferido.
 - Explique o que cada fonte ancora.
+- O Material de aula de cada nó segue regras próprias de pesquisa e
+  verificação, definidas em §4.3: pesquisa dedicada por nó, fidelidade ao
+  tópico e links abertos antes de entrar.
 - Evite rankings e comparativos voláteis; ensine critérios de escolha.
 - A `SPEC.md` não armazena pesquisa de um roadmap específico.
 
@@ -180,8 +205,11 @@ O topo separa barra do produto, hero educacional compacto, progresso e
 navegação sticky por fases. Instruções técnicas ficam nas docs ou no rodapé.
 
 O mapa permanece resumido. Clicar num nó abre um painel lateral único com ID,
-título e os quatro blocos pedagógicos. Concluir persiste o mesmo checkbox;
-Próximo abre o próximo nó pendente.
+título e os cinco blocos pedagógicos. O Material de aula aparece ao final do
+painel: artigos como lista de links externos e vídeos como players do YouTube
+embedados em 16:9 com `loading="lazy"`, cada um com link de apoio para abrir no
+YouTube. Concluir persiste o mesmo checkbox; Próximo abre o próximo nó
+pendente.
 
 Preserve:
 
@@ -203,12 +231,15 @@ Antes de entregar uma criação ou alteração:
 1. Fases cobrem do fundamento à aplicação avançada e declaram pré-requisitos.
 2. IDs existentes não foram renumerados.
 3. Todos os nós cumprem o formato obrigatório.
-4. Mermaid representa as dependências reais.
-5. Fontes primárias e data estão no Anexo B.
-6. Roadmap HTML foi regenerado.
-7. Glossário HTML foi regenerado quando houver glossário.
-8. Dashboard foi regenerado quando roadmaps foram criados ou removidos, ou
+4. Todo nó tem Material de aula com links verificados (artigo abre, vídeo
+   existe no YouTube) e fiéis ao tema do nó; o HTML renderiza os artigos como
+   links e os vídeos como players embedados.
+5. Mermaid representa as dependências reais.
+6. Fontes primárias e data estão no Anexo B.
+7. Roadmap HTML foi regenerado.
+8. Glossário HTML foi regenerado quando houver glossário.
+9. Dashboard foi regenerado quando roadmaps foram criados ou removidos, ou
    quando sua apresentação compartilhada mudou.
-9. Geradores compilam, `git diff --check` passa e pelo menos dois roadmaps são
-   verificados quando o layout compartilhado muda.
-10. `SPEC.md`, `AGENTS.md` e `skills/roadmap/SKILL.md` continuam alinhados.
+10. Geradores compilam, `git diff --check` passa e pelo menos dois roadmaps são
+    verificados quando o layout compartilhado muda.
+11. `SPEC.md`, `AGENTS.md` e `skills/roadmap/SKILL.md` continuam alinhados.
