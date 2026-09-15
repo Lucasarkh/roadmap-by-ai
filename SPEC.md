@@ -41,6 +41,8 @@ ai-structure/
 ├── SPEC.md
 ├── index.html                         # GERADO
 ├── progresso.json                     # estado local, opcional
+├── server.js                          # servidor local zero-dependência
+├── package.json
 ├── skills/
 │   └── roadmap/
 │       └── SKILL.md
@@ -149,12 +151,15 @@ python3 scripts/generate_index.py
 ```
 
 Os checkboxes gravam no `progresso.json`, chaveado pelo slug do roadmap e ID do
-nó. Em Chrome/Edge, usa File System Access API e conserva o handle no
-IndexedDB. Em navegadores sem essa API, o fallback é:
+nó. Servido por http, a interface usa `/api/progresso` automaticamente — o
+servidor local recomendado é:
 
 ```bash
-python3 scripts/serve.py
+npm start    # node server.js: serve, persiste, vigia os .md e regenera os HTMLs
 ```
+
+Aberto via `file://` em Chrome/Edge, usa File System Access API e conserva o
+handle no IndexedDB. O fallback sem Node é `python3 scripts/serve.py`.
 
 Não use `localStorage` para progresso.
 

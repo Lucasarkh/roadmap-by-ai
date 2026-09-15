@@ -3,8 +3,9 @@
 
 Cada card mostra título, barra de progresso (n/total, lida do progresso.json)
 e abre o HTML do roadmap — sem html único gigante e sem duplicar lógica. O
-progresso vem do progresso.json via File System Access API (sem servidor;
-ver scripts/progress_js.py). Regenerar quando um roadmap for criado/removido:
+progresso vem do progresso.json — via /api/progresso quando servido (node
+server.js) ou via File System Access API no file:// (ver scripts/progress_js.py).
+Regenerar quando um roadmap for criado/removido:
 
     python3 scripts/generate_index.py
 """

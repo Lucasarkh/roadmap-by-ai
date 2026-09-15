@@ -1,10 +1,11 @@
 """JS compartilhado de persistência de progresso, embutido nos HTML gerados.
 
-ProgressStore grava o progresso direto no progresso.json da raiz usando a
-File System Access API (Chrome/Edge) — nenhum servidor nem localStorage. O
-handle do arquivo fica salvo no IndexedDB, então a escolha é feita uma vez
-por navegador. Fallback: se o navegador não suporta a API, tenta o
-scripts/serve.py (/api/progresso); se também falhar, avisa na página.
+Servido por http(s) com /api/progresso disponível (node server.js ou
+scripts/serve.py), o ProgressStore grava direto no servidor — automático, sem
+banner nem clique. Aberto via file://, usa a File System Access API
+(Chrome/Edge) para gravar no progresso.json da raiz; o handle fica salvo no
+IndexedDB, então a escolha é feita uma vez por navegador. Se nenhum caminho
+funcionar, avisa na página. Nunca usa localStorage.
 """
 
 PROGRESS_JS = r"""
@@ -61,6 +62,10 @@ const ProgressStore = (() => {
 
   // init() -> 'ready' | 'connect' | 'regrant' | 'unsupported'
   async function init() {
+    if (location.protocol.startsWith('http')) {
+      try { await apiRead(); mode = 'api'; return 'ready'; }
+      catch { /* servidor sem API: segue para o modo arquivo */ }
+    }
     if ('showOpenFilePicker' in window) {
       mode = 'file';
       handle = await loadHandle();
@@ -70,8 +75,7 @@ const ProgressStore = (() => {
       } catch { /* cai no regrant */ }
       return 'regrant';
     }
-    try { await apiRead(); mode = 'api'; return 'ready'; }
-    catch { return 'unsupported'; }
+    return 'unsupported';
   }
   async function connect(create) {
     try {
@@ -147,7 +151,7 @@ async function wireProgress(banner, onReady) {
   if (status === 'regrant') {
     return show(['regrant'], 'A permissão do arquivo expirou — um clique reconecta.');
   }
-  show([], 'Este navegador não grava arquivos (sem File System Access API). Use Chrome/Edge, ou rode python3 scripts/serve.py e abra http://localhost:8000/.');
+  show([], 'Este navegador não grava arquivos (sem File System Access API). Rode npm start (ou python3 scripts/serve.py) e abra http://localhost:8000/.');
 }
 """
 

@@ -8,11 +8,30 @@ glossários em HTML, sem framework ou etapa de build.
 
 ## Requisitos
 
-- Python 3.9 ou superior;
-- Chrome ou Edge para persistência direta em arquivo;
-- qualquer navegador moderno usando o servidor fallback.
+- Node 18 ou superior, para o servidor local (recomendado);
+- Python 3.9 ou superior, para os geradores;
+- Chrome ou Edge para persistência direta em arquivo, sem servidor.
 
-Não há dependências Python externas.
+Não há dependências externas: `npm install` não é necessário.
+
+## Rodar local
+
+```bash
+npm start
+```
+
+Depois abra `http://localhost:8000/`. O servidor (`server.js`) usa só módulos
+nativos do Node e cuida de três coisas:
+
+- **progresso automático**: os checkboxes gravam no `progresso.json` via
+  `/api/progresso`, sem banner nem configuração;
+- **watcher**: editar `roadmaps/**/*.md` regenera o HTML correspondente e
+  recarrega a página aberta; editar `scripts/*.py` regenera tudo;
+- **live reload**: o navegador recarrega sozinho a cada geração ou reinício
+  do servidor.
+
+Sem Node, abra `index.html` direto no Chrome/Edge (persistência via File
+System Access API) ou use o fallback `python3 scripts/serve.py`.
 
 ## Começar
 
@@ -28,7 +47,8 @@ python3 scripts/generate_glossary_html.py roadmaps/<tema>/GLOSSARIO.md  # opcion
 python3 scripts/generate_index.py
 ```
 
-Abra `index.html` no navegador.
+Abra `index.html` no navegador ou rode `npm start` e acesse
+`http://localhost:8000/`.
 
 ## Formato mínimo de um nó
 
@@ -58,27 +78,23 @@ primeira trilha.
 
 ## Progresso
 
-Em Chrome e Edge, a interface usa File System Access API para gravar diretamente
-no `progresso.json`. O navegador conserva apenas o handle do arquivo no
-IndexedDB; o progresso não usa `localStorage`.
-
-Fallback para outros navegadores:
-
-```bash
-python3 scripts/serve.py
-```
-
-Depois acesse `http://localhost:8000/`.
+Servido por `npm start` (ou `python3 scripts/serve.py`), a interface grava o
+progresso automaticamente no `progresso.json` via `/api/progresso`, em
+qualquer navegador. Aberto via `file://` em Chrome/Edge, usa File System
+Access API e o navegador conserva apenas o handle do arquivo no IndexedDB. O
+progresso nunca usa `localStorage`.
 
 ## Estrutura
 
 ```text
+server.js                     servidor local zero-dependência (npm start)
+package.json                  scripts do Node
 skills/roadmap/SKILL.md       processo de criação e revisão
 scripts/generate_html.py      Markdown de roadmap → HTML
 scripts/generate_glossary_html.py
 scripts/generate_index.py     dashboard
 scripts/progress_js.py        persistência compartilhada
-scripts/serve.py              servidor fallback
+scripts/serve.py              servidor fallback em Python
 roadmaps/<tema>/              conteúdo de cada trilha
 ```
 

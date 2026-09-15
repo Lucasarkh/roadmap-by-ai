@@ -1,0 +1,9 @@
+{
+  "name": "roadmap-by-ai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Roadmaps de estudo do zero ao avançado — dashboard e mapas em HTML gerados a partir de Markdown.",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

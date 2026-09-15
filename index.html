@@ -107,6 +107,10 @@ const ProgressStore = (() => {
 
   // init() -> 'ready' | 'connect' | 'regrant' | 'unsupported'
   async function init() {
+    if (location.protocol.startsWith('http')) {
+      try { await apiRead(); mode = 'api'; return 'ready'; }
+      catch { /* servidor sem API: segue para o modo arquivo */ }
+    }
     if ('showOpenFilePicker' in window) {
       mode = 'file';
       handle = await loadHandle();
@@ -116,8 +120,7 @@ const ProgressStore = (() => {
       } catch { /* cai no regrant */ }
       return 'regrant';
     }
-    try { await apiRead(); mode = 'api'; return 'ready'; }
-    catch { return 'unsupported'; }
+    return 'unsupported';
   }
   async function connect(create) {
     try {
@@ -193,7 +196,7 @@ async function wireProgress(banner, onReady) {
   if (status === 'regrant') {
     return show(['regrant'], 'A permissão do arquivo expirou — um clique reconecta.');
   }
-  show([], 'Este navegador não grava arquivos (sem File System Access API). Use Chrome/Edge, ou rode python3 scripts/serve.py e abra http://localhost:8000/.');
+  show([], 'Este navegador não grava arquivos (sem File System Access API). Rode npm start (ou python3 scripts/serve.py) e abra http://localhost:8000/.');
 }
 
   const ROADMAPS = [];

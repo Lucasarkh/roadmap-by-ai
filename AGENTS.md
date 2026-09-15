@@ -30,6 +30,8 @@ ai-structure/
 ├── SPEC.md
 ├── index.html                         # GERADO
 ├── progresso.json                     # estado local, opcional
+├── server.js                          # servidor local zero-dependência
+├── package.json
 ├── skills/
 │   └── roadmap/SKILL.md
 ├── scripts/
@@ -52,16 +54,25 @@ roadmaps presentes em `roadmaps/*/*-ROADMAP.md`.
 
 ## Uso diário
 
-Abra `index.html` em Chrome ou Edge. Na primeira utilização, conecte ou crie o
-`progresso.json` pela interface. O handle fica salvo no navegador.
+```bash
+npm start
+```
 
-Fallback para navegadores sem File System Access API:
+Abra `http://localhost:8000/`. O servidor (`server.js`, Node 18+, sem
+dependências) salva o progresso automaticamente no `progresso.json` via
+`/api/progresso`, vigia `roadmaps/**/*.md` e `scripts/*.py` para regenerar os
+HTMLs e recarrega o navegador sozinho. Não use `localStorage`.
+
+Sem servidor, abra `index.html` em Chrome ou Edge: na primeira utilização,
+conecte ou crie o `progresso.json` pela interface (File System Access API) e o
+handle fica salvo no navegador.
+
+Fallback para navegadores sem File System Access API quando o Node não
+estiver disponível:
 
 ```bash
 python3 scripts/serve.py
 ```
-
-Depois acesse `http://localhost:8000/`. Não use `localStorage`.
 
 ## Editar conteúdo
 
